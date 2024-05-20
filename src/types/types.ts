@@ -41,8 +41,8 @@ export type ParamsType = {
   q: string;
   page: number;
   per_page: number;
-  sort: "id" | "name" | "watchers";
-  order: "ASC" | "DESC";
+  sort: string;
+  order: string;
 };
 
 export type ErrorMessage = {

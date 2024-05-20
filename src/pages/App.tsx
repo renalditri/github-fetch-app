@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import ReactIcon from "../assets/github-mark.svg";
 import DebouncedTextInput from "../components/DebouncedTextInput";
 import Pagination from "../components/Pagination";
@@ -21,14 +22,35 @@ const objectToParams = (params: ParamsType) => {
 };
 
 function App() {
-  const [params, setParams] = useState<ParamsType>({
-    q: "",
-    page: 1,
-    per_page: 20,
-    sort: "id",
-    order: "DESC",
-  });
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const params: ParamsType = useMemo(() => {
+    return {
+      q: searchParams.get("q") ?? "",
+      page: searchParams.get("page") ? Number(searchParams.get("page")) : 1,
+      per_page: searchParams.get("perPage")
+        ? Number(searchParams.get("perPage"))
+        : 20,
+      sort: searchParams.get("sort") ?? "id",
+      order: searchParams.get("order") ?? "DESC",
+    };
+  }, [searchParams]);
+
   const [isUser, setIsUser] = useState<boolean>(true);
+
+  const setParams = (params: ParamsType) => {
+    if (params.q === "") return;
+    const searchParams = new URLSearchParams();
+    Object.keys(params).forEach((key) => {
+      searchParams.append(
+        key,
+        params[key as unknown as keyof ParamsType]?.toString()
+      );
+    });
+    navigate({ pathname: location.pathname, search: searchParams?.toString() });
+  };
 
   const onSearch = (value: string) => {
     setParams({ ...params, q: value });
@@ -40,7 +62,7 @@ function App() {
     error: errorUser,
     isFetching: isFetchingUser,
   } = useGetUsersQuery(objectToParams(params), {
-    skip: params.q === "" && isUser,
+    skip: params.q === "" || !isUser,
   });
 
   const {
@@ -49,7 +71,7 @@ function App() {
     error: errorRepo,
     isFetching: isFetchingRepo,
   } = useGetRepositoryQuery(objectToParams(params), {
-    skip: params.q === "" && !isUser,
+    skip: params.q === "" || isUser,
   });
 
   const totalItems = isUser ? dataUser?.total_count : dataRepo?.total_count;
