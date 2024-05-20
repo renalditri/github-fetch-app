@@ -8,7 +8,6 @@ type PaginationProps = {
 };
 
 const Pagination = ({ params, setParams, totalItems }: PaginationProps) => {
-  console.log("rerender", params);
   const totalPages = Math.ceil(totalItems / params.per_page);
 
   const handleClickPage = (page: number) => {

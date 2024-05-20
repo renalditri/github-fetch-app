@@ -4,8 +4,24 @@
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
+img {
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
 .app {
-  padding: 1rem 4rem;
+  max-width: 1056px;
+  margin: auto;
+  padding: 0.5rem 0;
 }
 
 .header {
@@ -64,25 +80,50 @@
 .card-list {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1.5rem;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .card {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   padding: 0.4rem;
   border: 1px solid black;
   border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  pointer-events: none;
 }
 
-img {
-  max-width: 100%;
+.card span {
+  text-align: center;
+  margin: 0 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card a {
+  min-width: 32px;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.profile {
+  border-radius: 8rem;
+  width: 25%;
+}
+
+.github-icon {
+  height: 32px;
+  width: 32px;
 }
 
 .input-container {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
 }
 
 .select-input {
@@ -96,6 +137,7 @@ img {
   border: 1px solid #404040;
   border-radius: 0.25rem;
   padding: 0.4rem;
+  min-width: 22rem;
 }
 
 .text-input:focus {
@@ -142,10 +184,36 @@ img {
   }
 
   .select-input {
-    grid-column: span 4 / span 4;
+    grid-column: span 3 / span 3;
   }
 
   .text-input {
-    grid-column: span 6 / span 6;
+    min-width: auto;
+    grid-column: span 7 / span 7;
+  }
+
+  .card {
+    position: relative;
+    flex-direction: row;
+    font-weight: 600;
+    font-size: 1rem;
+    flex-wrap: wrap;
+    pointer-events: auto;
+  }
+
+  .profile {
+    flex: 1 0 100%;
+    border-radius: 8rem;
+    padding: 0.5rem;
+  }
+
+  .card span {
+    flex: 1 0 100%;
+    text-align: center;
+    margin: 0;
+  }
+
+  .github-icon {
+    display: none;
   }
 }

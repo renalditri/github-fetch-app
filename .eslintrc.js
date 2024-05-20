@@ -30,7 +30,11 @@ module.exports = {
     "prefer-const": "error",
     "no-var": "error",
     "no-console": ["warn", { allow: ["error"] }],
-    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { ignoreRestSiblings: true },
+    ],
+    "no-unused-vars": ["error", { ignoreRestSiblings: true }],
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/ban-ts-comment": "error",
     "prettier/prettier": ["error", { endOfLine: "auto", trailingComma: "es5" }],

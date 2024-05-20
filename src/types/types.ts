@@ -43,6 +43,7 @@ export type ParamsType = {
   per_page: number;
   sort: string;
   order: string;
+  type?: string;
 };
 
 export type ErrorMessage = {

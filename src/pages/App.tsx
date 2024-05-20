@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import ReactIcon from "../assets/github-mark.svg";
 import DebouncedTextInput from "../components/DebouncedTextInput";
@@ -14,9 +14,13 @@ import {
 import { ErrorMessage, ParamsType } from "../types/types";
 
 const objectToParams = (params: ParamsType) => {
+  const { type, ...restParams } = params;
   const searchParams = new URLSearchParams();
-  Object.keys(params).forEach((key) => {
-    searchParams.append(key, params[key as keyof ParamsType]?.toString());
+  Object.keys(restParams).forEach((key) => {
+    searchParams.append(
+      key,
+      restParams[key as keyof Omit<ParamsType, "type">]?.toString()
+    );
   });
   return searchParams.toString();
 };
@@ -35,18 +39,22 @@ function App() {
         : 20,
       sort: searchParams.get("sort") ?? "id",
       order: searchParams.get("order") ?? "DESC",
+      type: searchParams.get("type") ?? "user",
     };
   }, [searchParams]);
 
-  const [isUser, setIsUser] = useState<boolean>(true);
+  const isUser = useMemo(
+    () =>
+      searchParams.has("type") ? searchParams.get("type") === "user" : true,
+    [searchParams]
+  );
 
   const setParams = (params: ParamsType) => {
-    if (params.q === "") return;
     const searchParams = new URLSearchParams();
     Object.keys(params).forEach((key) => {
       searchParams.append(
         key,
-        params[key as unknown as keyof ParamsType]?.toString()
+        params?.[key as unknown as keyof ParamsType]?.toString() ?? ""
       );
     });
     navigate({ pathname: location.pathname, search: searchParams?.toString() });
@@ -94,7 +102,9 @@ function App() {
         />
         <select
           className="select-input"
-          onChange={(e) => setIsUser(e.currentTarget.value === "user")}
+          onChange={(e) =>
+            setParams({ ...params, type: e.currentTarget.value })
+          }
           defaultValue={isUser ? "user" : "repository"}
         >
           <option value="user">Users</option>
